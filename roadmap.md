@@ -79,6 +79,43 @@ Prepare the project for presentation, submission, or sharing.
 
 ---
 
+## 🌐 Phase 7: Web App Conversion (Flask, HTML, CSS, Jinja, JS)
+
+### ✅ Goal:
+Transform the console-based Neptune program into a beginner-friendly web app using Flask and web technologies.
+
+### 🔹 Steps & Outline:
+1. **Set Up Flask Project**
+   - Install Flask and create a new project structure
+   - Set up basic Flask app and run a "Hello, world!" page
+2. **Convert Features to Flask Routes**
+   - Create routes for main menu, view descriptions, weight calculator, and Neptune feeling
+   - Move logic from Python functions to route handlers
+3. **Create HTML Templates (Jinja)**
+   - Design simple, clean HTML pages for each feature
+   - Use Jinja templating for dynamic content (user input, results)
+4. **Add CSS Styling**
+   - Style pages for readability and a space/Neptune theme
+   - Keep CSS simple and well-commented
+5. **Add JavaScript (Optional for Interactivity)**
+   - Use JS for small enhancements (e.g., typewriter effect, input validation)
+6. **Test All Features**
+   - Ensure all user flows work as expected in the browser
+7. **Document How to Run the Web App**
+   - Update README with web app instructions
+
+### 🔹 Tasks:
+- [ ] Install Flask and set up virtual environment
+- [ ] Create `app.py` with Flask routes
+- [ ] Build HTML templates for each feature using Jinja
+- [ ] Migrate Python logic to Flask views
+- [ ] Add CSS for basic styling
+- [ ] (Optional) Add JavaScript for effects/interactivity
+- [ ] Test the app in the browser
+- [ ] Update README with web app instructions
+
+---
+
 ## 🏁 Final Goal
 
 A working, polished Python program that allows users to:
