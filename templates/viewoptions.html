@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Which View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='Tile.jpg') }}">
+    <style>
+        body {
+            /* background-color: #003366; */ /* Remove or comment out this line */
+            color: #ffffff;
+        }
+        .button-row {
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .tile-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+            @media (max-width: 650px) {
+            .tile-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .tile-row a {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/CoolLogo-Views.png" alt="Neptune" class="header-img" style="width:95vw; max-width:98vw; height:auto; display:block; margin:0 auto;">
+    <h1>Views!</h1>
+    <div class="tile-row">
+    <a href="/triton" style="display:inline-block; text-align:center;">
+        <img src="/static/Gallery/Gal9Triton.jpg" alt="View Triton" style="width:200px; height:auto; box-shadow:0 2px 8px #000;">
+    </a>
+    <a href="/neptune" style="display:inline-block; text-align:center;">
+        <img src="/static/Gallery/Gal1FullIconicFace.jpg" alt="View Neptune" style="width:200px; height:auto; box-shadow:0 2px 8px #000;">
+    </a>
+    <div style="display:inline-block; text-align:center; position:relative;">
+        <a href="/scale" style="display:inline-block; text-align:center; position:relative;">
+            <img src="/static/ScaleButton.png" alt="View Scale" style="width:200px; height:auto; box-shadow:0 2px 8px #000;">
+            <span class="rainbow_extra">
+                EXTRA!
+            </span>
+        </a>
+    </div>
+    </div>
+    <a href="/">
+        <span class="word-link">Back</span>
+    </a>
+    <footer class="footer-tiled">
+        Inspired by personal websites from the 90s.
+    </footer>
+</body>
+</html>

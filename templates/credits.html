@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Credits</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='Tile.jpg') }}">
+    <style>
+        body {
+            color: #ffffff;
+        }
+        .logo {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .credit-item {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/CoolLogo2.png" alt="Neptune" class="header-img" style="width:95vw; max-width:98vw; height:auto; display:block; margin:0 auto;">
+    <h1 class="rainbow_text">CREDITS!!!</h1>
+
+    <div class="credit-item">
+        <img src="/static/logos/Blender.webp" alt="logo" class="logo">
+        <span class="rainbow_text_small">Blender</span>
+        <img src="/static/logos/Blender.webp" alt="logo" class="logo">
+    </div>
+    <br><br>
+
+    <div class="credit-item">
+        <img src="/static/logos/ManOfSteel.webp" alt="logo" class="logo">
+        <span class="rainbow_text_small">Sean McCartney</span>
+        <img src="/static/logos/ManOfSteel.webp" alt="logo" class="logo">
+    </div>
+    <br><br>
+
+    <div class="credit-item">
+        <img src="/static/logos/VisualStudio.svg" alt="logo" class="logo">
+        <span class="rainbow_text_small">Visual Studio</span>
+        <img src="/static/logos/VisualStudio.svg" alt="logo" class="logo">
+    </div>
+    <br><br>
+
+    <div class="credit-item">
+        <img src="/static/logos/Python.png" alt="logo" class="logo">
+        <span class="rainbow_text_small">Python</span>
+        <img src="/static/logos/Python.png" alt="logo" class="logo">
+    </div>
+    <br><br>
+
+    <a href="/">
+        <span class="word-link">Back</span>
+    </a>
+
+    <footer class="footer-tiled">
+        Inspired by personal websites from the 90s.
+    </footer>
+</body>
+</html>

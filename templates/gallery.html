@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='Tile.jpg') }}">
+    <style>
+        body {
+            /* background-color: #003366; */ /* Remove or comment out this line */
+            color: #ffffff;
+        }
+        .button-row {
+            display: inline-flex;
+            align-items: center;
+        }
+        .gallery-item {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          justify-items: center;
+        }
+        
+        .gallery-item img {
+          max-width: 512px;
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/CoolLogo-Gallery.png" alt="Neptune" class="header-img" style="width:95vw; max-width:98vw; height:auto; display:block; margin:0 auto;">
+    <h1>Gallery</h1>
+    <h2 class="rainbow_text">Questions</h2>
+    <p style="color:#87ceeb; font-size:1.1em; margin-bottom:24px;">Q: Why do some of the white images show noise?</p>
+    <p style="color:#00ff4c; font-size:1.1em; margin-bottom:24px;">A: they show the geology or triton including clouds and plumes shown on the surface.</p>
+    <p style="color:#87ceeb; font-size:1.1em; margin-bottom:24px;">Q: Why do some images look discoloured?</p>
+    <p style="color:#00ff4c; font-size:1.1em; margin-bottom:24px;">A: Its how people process images in their own way, they will look discoloured since Voyager 2 only Captured in OGV, Orange, Green Violet, Which is why in recent times, the most recent images of Neptune, Look so desaturated, and why Uranus Looks White</p>
+    <p style="color:#87ceeb; font-size:1.1em; margin-bottom:24px;">Q: How can I Download the images?</p>
+    <p style="color:#00ff4c; font-size:1.1em; margin-bottom:24px;">A: Press the image, and save the image by right clicking it and press the save button</p>
+
+    <div class="gallery-item">
+        {% for image in image_files %}
+            <img src="{{ url_for('static', filename=image) }}" alt="Neptune" style="width:100%; height:auto; max-width:512px;">
+        {% endfor %}
+    </div>
+
+    <!-- Modal for full-res image preview -->
+    <div id="imageModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
+        <span id="closeModal" style="position:absolute; top:24px; right:48px; color:white; font-size:2.5em; cursor:pointer;">&times;</span>
+        <img id="modalImg" src="" alt="Full Image" style="max-width:90vw; max-height:90vh; display:block; margin:auto;">
+    </div>
+
+    <script>
+        // Get modal elements
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const closeModal = document.getElementById('closeModal');
+
+        // Add click event to all gallery images
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.addEventListener('click', function() {
+                modal.style.display = 'flex';
+                modalImg.src = this.src; // If you have a separate full-res path, update this line
+            });
+        });
+
+        // Close modal on click of X or outside image
+        closeModal.onclick = function() {
+            modal.style.display = 'none';
+            modalImg.src = '';
+        };
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                modalImg.src = '';
+            }
+        };
+    </script>
+
+    <a href="/">
+        <span class="word-link">Back</span>
+    </a>
+    <footer class="footer-tiled">
+        Inspired by personal websites from the 90s.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scale</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='Tile.jpg') }}">
+    <style>
+        body {
+            color: #ffffff;
+        }
+        input[type="number"] {
+            color: #003366;
+            background-color: #e0e0e0;
+            border: 2px inset #cccccc;
+            padding: 4px 6px;
+            border-radius: 0;
+            font-family: inherit; /* Use the same font as the body/text */
+            font-size: 1em;
+            box-shadow: none;
+            outline: none;
+            width: 180px;
+        }
+        input[type="number"]:focus {
+            border: 2px inset #66ccff;
+            background-color: #f8f8ff;
+        }
+        /* Make preset buttons look like links and display inline */
+        .preset-btn {
+            background: none;
+            color: #66ccff;
+            border: none;
+            padding: 6px 0;
+            font-size: 1em;
+            cursor: pointer;
+            text-align: left;
+            text-decoration: underline;
+            min-width: 0;
+            border-radius: 0;
+            transition: color 0.2s;
+            font-family: inherit;
+            display: inline-block;
+            width: 25%; /* 4 per row by default */
+            box-sizing: border-box;
+        }
+        .preset-btn:hover {
+            color: #3399ff;
+            background: none;
+            text-decoration: underline;
+        }
+        .main-flex-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        #solar-system-container {
+            width: 90vw;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            min-width: 320px;
+            min-height: 180px;
+            background: #222;
+            border-radius: 12px;
+            box-shadow: 0 0 16px #000;
+            margin: 30px 0 16px 0;
+            position: relative;
+            height: auto;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preset-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            max-width: 700px;
+            width: 100%;
+        }
+        @media (max-width: 900px) {
+            .preset-btn-row {
+                max-width: 98vw;
+                width: 98vw;
+            }
+            .preset-btn {
+                width: 33.33%; /* 3 per row */
+            }
+        }
+        @media (max-width: 600px) {
+            .preset-btn {
+                width: 50%; /* 2 per row */
+            }
+        }
+        @media (max-width: 400px) {
+            .preset-btn {
+                width: 100%; /* 1 per row */
+            }
+        }
+
+        /* New styles for controls section */
+        #viewer-controls {
+            width: 100%;
+            max-width: 900px;
+            margin: 32px auto 0 auto;
+            padding: 18px 0 24px 0;
+            background: #181c22;
+            border-radius: 10px;
+            box-shadow: 0 0 8px #000;
+            color: #fff;
+            text-align: center;
+        }
+        #viewer-controls h2 {
+            margin-bottom: 12px;
+            color: #66ccff;
+        }
+        #viewer-controls .control-description {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        #viewer-controls .tip {
+            font-size: 1em;
+            color: #b0c4de;
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/CoolLogo-Scale.png" alt="Neptune" class="header-img" style="width:95vw; max-width:98vw; height:auto; display:block; margin:0 auto;">
+    <h1>Compare With Neptune!</h1>
+    <div class="main-flex-container">
+        <!-- 3D Sphere Window Start -->
+        <div id="solar-system-container"></div>
+        <!-- Preset Buttons in Solar System Order -->
+        <div class="preset-btn-row">
+            <button class="preset-btn" data-diameter="4879.4">Mercury<br><span style="font-size:0.9em;">4,879 km</span></button>
+            <button class="preset-btn" data-diameter="12104">Venus<br><span style="font-size:0.9em;">12,104 km</span></button>
+            <button class="preset-btn" data-diameter="12756">Earth<br><span style="font-size:0.9em;">12,756 km</span></button>
+            <button class="preset-btn" data-diameter="3474.8">Moon<br><span style="font-size:0.9em;">3,474.8 km</span></button>
+            <button class="preset-btn" data-diameter="6779">Mars<br><span style="font-size:0.9em;">6,779 km</span></button>
+            <button class="preset-btn" data-diameter="139820">Jupiter<br><span style="font-size:0.9em;">139,820 km</span></button>
+            <button class="preset-btn" data-diameter="120536">Saturn<br><span style="font-size:0.9em;">120,536 km</span></button>
+            <button class="preset-btn" data-diameter="51118">Uranus<br><span style="font-size:0.9em;">51,118 km</span></button>
+            <button class="preset-btn" data-diameter="49528">Neptune<br><span style="font-size:0.9em;">49,528 km</span></button>
+            <button class="preset-btn" data-diameter="2706.8">Triton<br><span style="font-size:0.9em;">2,706.8 km</span></button>
+            <button class="preset-btn" data-diameter="2376.6">Pluto<br><span style="font-size:0.9em;">2,376.6 km</span></button>
+            <button class="preset-btn" data-diameter="1391982.78">Sun<br><span style="font-size:0.9em;">1,391,983 km</span></button>
+        </div>
+    </div>
+    <div style="width: 520px; margin: 0 auto 10px auto; text-align: center; color: #66ccff; font-size: 1.1em;">
+        <span style="color:#3399ff;">●</span> Earth (<span id="earth-diameter-label">12,742</span> km) &nbsp;&nbsp;
+        <span style="color:#3b9eea;">●</span> Neptune (49,244 km)
+    </div>
+    <div style="width: 520px; margin: 0 auto 30px auto; text-align: center;">
+        <label for="earth-scale-input" style="color:#fff;">Set Earth Diameter (km): </label>
+        <input id="earth-scale-input" type="number" min="1" max="1391982.78" value="12756" step="1">
+    </div>
+    <!-- Controls and info at the bottom -->
+    <div id="viewer-controls">
+        <h2>3D Viewer Controls</h2>
+        <div class="control-description">
+            <b>Rotate:</b> A & D Key &nbsp;|&nbsp;
+            <b>Zoom:</b> - & + Key &nbsp;|&nbsp;
+            <b>Planet Distance:</b> Arrow Keys &nbsp;|&nbsp;
+            <b>Pivot Planet:</b> Q & E Key
+        </div>
+        <div class="tip">
+            <b>Tip:</b> Use the preset buttons above to instantly view planets and moons at their real scale!
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
+    <script>
+        // Initial diameters in km
+        let earthDiameterKm = 12756;
+        const neptuneDiameterKm = 49244;
+
+        // We'll use 1 unit = 6,371 km (Earth's radius)
+        const unitKm = 6371;
+
+        // Calculate radii in Three.js units
+        function getEarthRadiusUnits() {
+            return (earthDiameterKm / 2) / unitKm;
+        }
+        function getNeptuneRadiusUnits() {
+            return (neptuneDiameterKm / 2) / unitKm;
+        }
+
+        // Responsive Three.js renderer
+        function resizeRenderer() {
+            const container = document.getElementById('solar-system-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            renderer.setSize(width, height, false);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        }
+
+        // Set up scene, camera, and renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000); // Set background to black
+
+        // Initial aspect ratio, will be updated on resize
+        const container = document.getElementById('solar-system-container');
+        const initialWidth = container.clientWidth || 900;
+        const initialHeight = container.clientHeight || (initialWidth * 9 / 16);
+        const camera = new THREE.PerspectiveCamera(60, initialWidth / initialHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(initialWidth, initialHeight, false);
+        container.appendChild(renderer.domElement);
+
+        // Load Earth texture
+        const earthTexture = new THREE.TextureLoader().load('/static/PlanetMaps/ExampleMap.jpg'); // Place your Earth texture here
+
+        // Preload all textures
+        const earthTextureDefault = new THREE.TextureLoader().load('/static/PlanetMaps/ExampleMap.jpg');
+        const earthTextureEarth = new THREE.TextureLoader().load('/static/PlanetMaps/Earth.jpg');
+        const earthTextureMars = new THREE.TextureLoader().load('/static/PlanetMaps/Mars.jpg');
+        const earthTextureVenus = new THREE.TextureLoader().load('/static/PlanetMaps/Venus.jpg');
+        const earthTextureMercury = new THREE.TextureLoader().load('/static/PlanetMaps/Mercury.jpg'); // Place your Mercury map here
+        const earthTextureJupiter = new THREE.TextureLoader().load('/static/PlanetMaps/Jupiter.gif'); // Place your Mercury map here
+        const earthTextureSaturn = new THREE.TextureLoader().load('/static/PlanetMaps/Saturn.jpg'); // Place your Mercury map here
+        const earthTextureUranus = new THREE.TextureLoader().load('/static/PlanetMaps/Uranus.jpg'); // Place your Mercury map here
+        const earthTextureNeptune = new THREE.TextureLoader().load('/static/NeptuneMap.jpg'); // Place your Mercury map here
+        const earthTextureTriton = new THREE.TextureLoader().load('/static/TritonMap.jpg'); // Place your Mercury map here
+        const earthTexturePluto = new THREE.TextureLoader().load('/static/PlanetMaps/Pluto.jpg'); // Place your Mercury map here
+        const earthTextureSun = new THREE.TextureLoader().load('/static/PlanetMaps/Sun.jpg'); // Place your Mercury map here
+
+
+
+
+
+        function getEarthMaterial(currentTexture) {
+            return new THREE.MeshStandardMaterial({
+                map: currentTexture,
+                metalness: 0.1,
+                roughness: 0.9,
+                side: THREE.FrontSide
+            });
+        }
+
+        // Initial Earth sphere with Earth texture
+        let earthGeometry = new THREE.SphereGeometry(getEarthRadiusUnits(), 64, 64);
+        let earthMaterial = getEarthMaterial(earthTextureEarth); // Start with Earth's map
+        let earthSphere = new THREE.Mesh(earthGeometry, earthMaterial);
+        earthSphere.position.x = 0; // Center
+
+        // Load Neptune texture
+        const neptuneTexture = new THREE.TextureLoader().load('/static/NeptuneMap.jpg'); // Use your actual path
+
+        let neptuneGeometry = new THREE.SphereGeometry(getNeptuneRadiusUnits(), 64, 64);
+        const neptuneMaterial = new THREE.MeshStandardMaterial({
+            map: neptuneTexture,
+            metalness: 0.1,
+            roughness: 0.9,
+            side: THREE.FrontSide
+        });
+        let neptuneSphere = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+
+        // Initial Neptune position
+        const gapUnits = 1.5;
+        function updateNeptunePosition() {
+            neptuneSphere.position.x = getEarthRadiusUnits() + getNeptuneRadiusUnits() + gapUnits;
+        }
+        updateNeptunePosition();
+
+        scene.add(earthSphere);
+        scene.add(neptuneSphere);
+
+        // Remove the old point light and add a directional "sun" light
+        // Remove or comment out the old point light code:
+        // const light = new THREE.PointLight(0xffffff, 1.2, 100);
+        // light.position.set(10, 10, 15);
+        // scene.add(light);
+
+        // Add a directional sunlight
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        sunLight.position.set(10, 10, 15);
+        sunLight.castShadow = true;
+        scene.add(sunLight);
+
+        // Add a Back Lihgt sunlight
+        const sunLightB = new THREE.DirectionalLight(0xffffff, 3.5);
+        sunLightB.position.set(-10, -10, -15);
+        sunLightB.castShadow = true;
+        scene.add(sunLightB);
+
+        // Optionally, add a helper to visualize the sun direction (for debugging)
+        // const helper = new THREE.DirectionalLightHelper(sunLight, 2);
+        // scene.add(helper);
+
+        // Camera distance factor (multiplier of the distance between spheres)
+        let cameraDistanceFactor = 2.5;
+        let focusOnEarth = false; // Option to focus on the smaller sphere
+        let focusOnNeptune = false; // Option to focus on Neptune
+        let focusZoomFactor = 2; // Closer default zoom for focus modes
+        let orbitAngle = 0; // Angle in radians for orbiting
+
+        function updateCamera() {
+            // Find the pivot (midpoint) between the two spheres
+            const pivotX = (earthSphere.position.x + neptuneSphere.position.x) / 2;
+            const distance = Math.abs(neptuneSphere.position.x - earthSphere.position.x);
+
+            let targetX, targetZ, lookAtX;
+            if (focusOnEarth) {
+                targetX = earthSphere.position.x + Math.sin(orbitAngle) * getEarthRadiusUnits() * cameraDistanceFactor * focusZoomFactor;
+                targetZ = Math.cos(orbitAngle) * getEarthRadiusUnits() * cameraDistanceFactor * focusZoomFactor;
+                lookAtX = earthSphere.position.x;
+                camera.position.set(targetX, 0, targetZ);
+                camera.lookAt(lookAtX, 0, 0);
+            } else if (focusOnNeptune) {
+                targetX = neptuneSphere.position.x + Math.sin(orbitAngle) * getNeptuneRadiusUnits() * cameraDistanceFactor * focusZoomFactor;
+                targetZ = Math.cos(orbitAngle) * getNeptuneRadiusUnits() * cameraDistanceFactor * focusZoomFactor;
+                lookAtX = neptuneSphere.position.x;
+                camera.position.set(targetX, 0, targetZ);
+                camera.lookAt(lookAtX, 0, 0);
+            } else {
+                targetX = pivotX + Math.sin(orbitAngle) * distance * cameraDistanceFactor;
+                targetZ = Math.cos(orbitAngle) * distance * cameraDistanceFactor;
+                lookAtX = pivotX;
+                camera.position.set(targetX, 0, targetZ);
+                camera.lookAt(lookAtX, 0, 0);
+            }
+        }
+        updateCamera();
+
+        // Toggle focus mode with 'e' (Earth), 'q' (Neptune), and zoom/orbit with keys
+        document.addEventListener('keydown', function(e) {
+            const step = 0.2;
+            const orbitStep = Math.PI / 36; // 5 degrees per key press
+            if (e.key === 'ArrowRight') {
+                neptuneSphere.position.x += step;
+                updateCamera();
+            } else if (e.key === 'ArrowLeft') {
+                neptuneSphere.position.x -= step;
+                updateCamera();
+            } else if (e.key === 'e' || e.key === 'E') {
+                focusOnEarth = !focusOnEarth;
+                if (focusOnEarth) {
+                    focusOnNeptune = false;
+                    focusZoomFactor = 2;
+                }
+                updateCamera();
+            } else if (e.key === 'q' || e.key === 'Q') {
+                focusOnNeptune = !focusOnNeptune;
+                if (focusOnNeptune) {
+                    focusOnEarth = false;
+                    focusZoomFactor = 2;
+                }
+                updateCamera();
+            } else if (!focusOnEarth && !focusOnNeptune && (e.key === '-' || e.key === '_')) {
+                cameraDistanceFactor = Math.max(0.5, cameraDistanceFactor - 0.2);
+                updateCamera();
+            } else if (!focusOnEarth && !focusOnNeptune && (e.key === '=' || e.key === '+')) {
+                cameraDistanceFactor = Math.min(10, cameraDistanceFactor + 0.2);
+                updateCamera();
+            } else if (focusOnEarth && (e.key === '-' || e.key === '_')) {
+                focusZoomFactor = Math.max(1, focusZoomFactor - 0.2);
+                updateCamera();
+            } else if (focusOnEarth && (e.key === '=' || e.key === '+')) {
+                focusZoomFactor = Math.min(10, focusZoomFactor + 0.2);
+                updateCamera();
+            } else if (focusOnNeptune && (e.key === '-' || e.key === '_')) {
+                focusZoomFactor = Math.max(1, focusZoomFactor - 0.2);
+                updateCamera();
+            } else if (focusOnNeptune && (e.key === '=' || e.key === '+')) {
+                focusZoomFactor = Math.min(10, focusZoomFactor + 0.2);
+                updateCamera();
+            } else if (e.key === 'a' || e.key === 'A') {
+                orbitAngle -= orbitStep;
+                updateCamera();
+            } else if (e.key === 'd' || e.key === 'D') {
+                orbitAngle += orbitStep;
+                updateCamera();
+            }
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            earthSphere.rotation.y += 0.01;
+            neptuneSphere.rotation.y += 0.008;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Translate Neptune with arrow keys
+        document.addEventListener('keydown', function(e) {
+            const step = 0.2;
+            if (e.key === 'ArrowRight') {
+                neptuneSphere.position.x += step;
+            } else if (e.key === 'ArrowLeft') {
+                neptuneSphere.position.x -= step;
+            }
+            updateCamera();
+        });
+
+        // Handle Earth scale input
+        const earthInput = document.getElementById('earth-scale-input');
+        const earthLabel = document.getElementById('earth-diameter-label');
+        earthInput.addEventListener('input', function() {
+            let val = parseFloat(earthInput.value);
+            if (isNaN(val) || val < 1000) val = 1000;
+            if (val > 1391982.78) val = 1391982.78;
+            earthDiameterKm = val;
+            earthLabel.textContent = earthDiameterKm.toLocaleString();
+
+            // Remove old sphere
+            scene.remove(earthSphere);
+            earthGeometry.dispose();
+            earthMaterial.dispose();
+
+            // Choose texture based on scale
+            let currentTexture;
+            if (earthDiameterKm === 12756) {
+                currentTexture = earthTextureEarth;
+                
+            } else if (earthDiameterKm === 6779) {
+                currentTexture = earthTextureMars;
+
+            } else if (earthDiameterKm === 12104) {
+                currentTexture = earthTextureVenus;
+
+            } else if (earthDiameterKm === 4879.4) {
+                currentTexture = earthTextureMercury;
+
+            } else if (earthDiameterKm === 139820) {
+                currentTexture = earthTextureJupiter;
+
+            } else if (earthDiameterKm === 120536) {
+                currentTexture = earthTextureSaturn;
+
+            } else if (earthDiameterKm === 51118) {
+                currentTexture = earthTextureUranus;
+
+            } else if (earthDiameterKm === 49528) {
+                currentTexture = earthTextureNeptune;
+
+            } else if (earthDiameterKm === 2706.8) {
+                currentTexture = earthTextureTriton;
+
+            } else if (earthDiameterKm === 2376.6) {
+                currentTexture = earthTexturePluto;
+
+            } else if (earthDiameterKm === 1391982.78) {
+                currentTexture = earthTextureSun;
+                
+            } else {
+                currentTexture = earthTextureDefault;
+            }
+
+            // Create new geometry and mesh with the correct texture
+            earthGeometry = new THREE.SphereGeometry(getEarthRadiusUnits(), 64, 64);
+            earthMaterial = getEarthMaterial(currentTexture);
+            earthSphere = new THREE.Mesh(earthGeometry, earthMaterial);
+            earthSphere.position.x = 0;
+            scene.add(earthSphere);
+
+            // Update Neptune's geometry and position so they don't overlap
+            scene.remove(neptuneSphere);
+            neptuneGeometry.dispose();
+            neptuneGeometry = new THREE.SphereGeometry(getNeptuneRadiusUnits(), 64, 64);
+            neptuneSphere = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+            updateNeptunePosition();
+            scene.add(neptuneSphere);
+
+            // Update camera position to keep constant distance from the pivot
+            updateCamera();
+        });
+
+        // Preset diameter buttons logic
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const val = this.getAttribute('data-diameter');
+                earthInput.value = val;
+                earthInput.dispatchEvent(new Event('input'));
+            });
+        });
+
+        // Responsive resize event
+        window.addEventListener('resize', () => {
+            resizeRenderer();
+        });
+
+        // Also resize on DOMContentLoaded in case of late rendering
+        window.addEventListener('DOMContentLoaded', () => {
+            resizeRenderer();
+        });
+
+        // Optionally, call once at start
+        resizeRenderer();
+    </script>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+    <a href="/voptions">
+        <span class="word-link">Back To View Options</span>
+    </a>
+    <a href="/">
+        <span class="word-link">Back</span>
+    </a>
+    <!-- 3D Sphere Window End -->
+    <footer class="footer-tiled">
+        Inspired by personal websites from the 90s.
+    </footer>
+</body>
+</html>

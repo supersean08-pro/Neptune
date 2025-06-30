@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neptune Experience</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='Tile.jpg') }}">
+    <style>
+        body {
+            /* background-color: #003366; */ /* Remove or comment out this line */
+            color: #ffffff;
+        }
+        .neptune-icon {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .button-row {
+            display: inline-flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/CoolLogo2.png" alt="Neptune" class="header-img" style="width:95vw; max-width:98vw; height:auto; display:block; margin:0 auto;">
+    <h1>Welcome to Neptune!</h1>
+    <a href="/weight" class="button-row">
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+        <span class="word-link">What It Would Feel Like</span>
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+    </a>
+    <br><br>
+    <a href="/voptions" class="button-row">
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+        <span class="word-link">Views</span>
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+    </a>
+    <br><br>
+    <a href="/wiki" class="button-row">
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+        <span class="word-link">Wiki</span>
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+    </a>
+    <br><br>
+    <a href="/gallery" class="button-row">
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+        <span class="word-link">Gallery</span>
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+    </a>
+    <br><br>
+    <a href="/credits" class="button-row">
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+        <span class="word-link">Credits</span>
+        <img src="/static/SpinningNeptune.gif" alt="Spinning Neptune" class="neptune-icon">
+    </a>
+    <footer class="footer-tiled">
+        Inspired by personal websites from the 90s.
+    </footer>
+</body>
+</html>

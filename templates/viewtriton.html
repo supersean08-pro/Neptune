@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Triton</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='Tile.jpg') }}">
+    <style>
+        body {
+            color: #ffffff;
+        }
+        input[type="number"] {
+            color: #003366;
+            background-color: #e0e0e0;
+            border: 2px inset #cccccc;
+            padding: 4px 6px;
+            border-radius: 0;
+            font-family: inherit; /* Use the same font as the body/text */
+            font-size: 1em;
+            box-shadow: none;
+            outline: none;
+            width: 180px;
+        }
+        input[type="number"]:focus {
+            border: 2px inset #66ccff;
+            background-color: #f8f8ff;
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/CoolLogo-Look2.png" alt="Neptune" class="header-img" style="width:95vw; max-width:98vw; height:auto; display:block; margin:0 auto;">
+    <h1>Welcome to Triton!</h1>
+    <div id="neptune-3d-window" style="width: 400px; height: 300px; margin: 30px auto; border: 4px ridge #66ccff; background: #000;"></div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="/voptions">
+            <span class="word-link">Back To View Options</span>
+        </a>
+        <a href="/">
+            <span class="word-link">Back</span>
+        </a>
+    </div>
+    <footer class="footer-tiled">
+        Inspired by personal websites from the 90s.
+    </footer>
+    <!-- Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+    <script>
+        // Scene setup
+        const width = 400, height = 300;
+        const scene = new THREE.Scene();
+
+        // Real Neptune radius: 24,622 km. We'll use 1 unit = 1,000 km.
+        const SCALE = 1000;
+        const NEPTUNE_RADIUS_KM = 24622;
+        const neptuneRadius = NEPTUNE_RADIUS_KM / SCALE; // 24.622 units
+
+        const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
+        camera.position.set(0, 0, neptuneRadius * 3); // 3 Neptune radii away
+
+        const renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setSize(width, height);
+        document.getElementById('neptune-3d-window').appendChild(renderer.domElement);
+
+        // Neptune sphere
+        const geometry = new THREE.SphereGeometry(neptuneRadius, 64, 64);
+        const texture = new THREE.TextureLoader().load('/static/TritonMap.jpg');
+        const material = new THREE.MeshPhongMaterial({ map: texture });
+        const sphere = new THREE.Mesh(geometry, material);
+
+        // Apply Neptune's axial tilt (28.32 degrees)
+        sphere.rotation.z = THREE.MathUtils.degToRad(28.32);
+        sphere.rotation.y = THREE.MathUtils.degToRad(-85);
+
+        scene.add(sphere);
+
+        // Sun Light
+        const sunlight = new THREE.DirectionalLight(0xffffff, 1.2);
+        // Place sun at a realistic but viewable distance (e.g., 450,000 km from Neptune, scaled)
+        sunlight.position.set(0, 0, neptuneRadius + 450000 / SCALE);
+        sunlight.target.position.set(0, 0, 0);
+        scene.add(sunlight);
+        scene.add(sunlight.target);
+
+        // WASD and Arrow controls
+        const keys = {};
+        document.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; keys[e.code] = true; });
+        document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; keys[e.code] = false; });
+
+        function updateCamera() {
+            const speed = 1;
+            // Calculate forward and right vectors from camera rotation
+            const direction = new THREE.Vector3();
+            camera.getWorldDirection(direction);
+            direction.y = 0; // lock movement to horizontal plane
+            direction.normalize();
+
+            const right = new THREE.Vector3();
+            right.crossVectors(direction, camera.up).normalize();
+
+            // Build movement vector
+            let move = new THREE.Vector3();
+            if (keys['w']) move.add(direction);
+            if (keys['s']) move.addScaledVector(direction, -1);
+            if (keys['a']) move.addScaledVector(right, -1);
+            if (keys['d']) move.add(right);
+
+            if (move.lengthSq() > 0) {
+                move.normalize();
+                camera.position.addScaledVector(move, speed);
+            }
+
+            // Arrow keys to look around
+            const lookSpeed = 0.025;
+            if (keys['ArrowLeft'])  camera.rotation.y += lookSpeed;
+            if (keys['ArrowRight']) camera.rotation.y -= lookSpeed;
+            // if (keys['ArrowUp'])    camera.rotation.x += lookSpeed;
+            // if (keys['ArrowDown'])  camera.rotation.x -= lookSpeed;
+        }
+
+        // Animate
+        function animate() {
+            requestAnimationFrame(animate);
+            updateCamera();
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+    <p style="text-align:center; color:#66ccff; font-family:monospace; margin-top:8px;">
+        Use <b>WASD</b> to move &amp; <b>Arrow keys</b> to look around
+    </p>
+</body>
+</html>
